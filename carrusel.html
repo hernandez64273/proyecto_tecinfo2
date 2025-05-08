@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel de Imágenes</title>
+    <style>
+        .carrusel-contenedor {
+            width: 600px; /* Ancho del contenedor del carrusel */
+            overflow: hidden; /* Oculta las imágenes que están fuera del contenedor */
+            position: relative; /* Para posicionar los botones de navegación */
+            margin: 20px auto; /* Centra el carrusel en la página */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+            border-radius: 8px; /* Bordes redondeados */
+        }
+
+        .carrusel-track {
+            display: flex; /* Coloca las imágenes en línea horizontal */
+            transition: transform 0.5s ease-in-out; /* Animación suave al cambiar de imagen */
+        }
+
+        .carrusel-imagen {
+            width: 100%; /* Cada imagen ocupa el ancho del contenedor */
+            flex-shrink: 0; /* Evita que las imágenes se encojan */
+        }
+
+        .carrusel-imagen img {
+            width: 100%;
+            height: auto;
+            display: block; /* Elimina el espacio debajo de la imagen */
+        }
+
+        .nav-botones {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .nav-botones button {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .nav-botones button:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .indicadores {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .indicadores button {
+            background: #bbb;
+            border: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .indicadores button.activo {
+            background-color: #717171;
+        }
+    </style>
+</head>
+<body>
+    <div class="carrusel-contenedor">
+        <div class="carrusel-track">
+            <div class="carrusel-imagen"><img src="C:\Users\usuariocc10\Desktop\Proyecto Trabajo JS\images 1.jpg" alt="Imagen 1"></div>
+            <div class="carrusel-imagen"><img src="C:\Users\usuariocc10\Desktop\Proyecto Trabajo JS\imagen 2.webp" alt="Imagen 2"></div>
+            <div class="carrusel-imagen"><img src="C:\Users\usuariocc10\Desktop\Proyecto Trabajo JS\imagen3.jpg" alt="Imagen 3"></div>
+            <div class="carrusel-imagen"><img src="C:\Users\usuariocc10\Desktop\Proyecto Trabajo JS\imagen 4.jpg" alt="Imagen 4"></div>
+            <div class="carrusel-imagen"><img src="C:\Users\usuariocc10\Desktop\Proyecto Trabajo JS\imagen 5.jpg" alt="Imagen 5"></div>
+            <div class="carrusel-imagen"><img src="C:\Users\usuariocc10\Desktop\Proyecto Trabajo JS\imagen 6.jpg" alt="Imagen 6"></div>
+        </div>
+        <div class="nav-botones">
+            <button id="anterior">&#10094;</button>
+            <button id="siguiente">&#10095;</button>
+        </div>
+    </div>
+
+    <div class="indicadores">
+        <button class="indicador activo"></button>
+        <button class="indicador"></button>
+        <button class="indicador"></button>
+        <button class="indicador"></button>
+        <button class="indicador"></button>
+        <button class="indicador"></button>
+    </div>
+
+    <script>
+        const carruselContenedor = document.querySelector('.carrusel-contenedor');
+        const carruselTrack = document.querySelector('.carrusel-track');
+        const imagenes = document.querySelectorAll('.carrusel-imagen');
+        const botonAnterior = document.getElementById('anterior');
+        const botonSiguiente = document.getElementById('siguiente');
+        const indicadoresContenedor = document.querySelector('.indicadores');
+        const indicadores = document.querySelectorAll('.indicador');
+
+        let indiceActual = 0;
+        const anchoImagen = imagenes[0].offsetWidth; // Ancho de cada imagen
+
+        function actualizarCarrusel(indice) {
+            carruselTrack.style.transform = `translateX(-${indice * anchoImagen}px)`;
+            actualizarIndicadores(indice);
+        }
+
+        function actualizarIndicadores(indice) {
+            indicadores.forEach((indicador, i) => {
+                indicador.classList.toggle('activo', i === indice);
+            });
+        }
+
+        botonAnterior.addEventListener('click', () => {
+            indiceActual = (indiceActual - 1 + imagenes.length) % imagenes.length;
+            actualizarCarrusel(indiceActual);
+        });
+
+        botonSiguiente.addEventListener('click', () => {
+            indiceActual = (indiceActual + 1) % imagenes.length;
+            actualizarCarrusel(indiceActual);
+        });
+
+        indicadoresContenedor.addEventListener('click', (evento) => {
+            const nuevoIndice = Array.from(indicadores).indexOf(evento.target);
+            if (nuevoIndice !== -1) {
+                indiceActual = nuevoIndice;
+                actualizarCarrusel(indiceActual);
+            }
+        });
+
+        // Asegurar que el ancho de la imagen se recalcule en caso de redimensionamiento de la ventana
+        window.addEventListener('resize', () => {
+            anchoImagen = imagenes[0].offsetWidth;
+            actualizarCarrusel(indiceActual);
+        });
+    </script>
+</body>
+</html>
